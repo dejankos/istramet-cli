@@ -1,12 +1,10 @@
-
-
 use std::str::FromStr;
 
 use anyhow::anyhow;
 use anyhow::bail;
 use anyhow::Result;
-use scraper::element_ref::Select;
 use scraper::{ElementRef, Html, Selector};
+use scraper::element_ref::Select;
 
 use crate::symbols::{Weather, Wind};
 
@@ -65,16 +63,16 @@ fn parse_header_row(header_row: Select) -> Row {
 }
 
 fn parse_data_row(data_row: Select) -> Row {
-    let mut iter = data_row.into_iter();
+    let mut iter = data_row;
     vec![
-        parse(iter.next(), |e| unwrap_val(e)),
-        parse(iter.next(), |e| map_weather_pic(e)),
-        parse(iter.next(), |e| unwrap_val(e)),
-        parse(iter.next(), |e| map_rain(e)),
-        parse(iter.next(), |e| unwrap_val(e)),
-        parse(iter.next(), |e| unwrap_val(e)),
-        parse(iter.next(), |e| map_wind(e)),
-        parse(iter.next(), |e| unwrap_val(e)),
+        parse(iter.next(), unwrap_val),
+        parse(iter.next(), map_weather_pic),
+        parse(iter.next(), unwrap_val),
+        parse(iter.next(), map_rain),
+        parse(iter.next(), unwrap_val),
+        parse(iter.next(), unwrap_val),
+        parse(iter.next(), map_wind),
+        parse(iter.next(), unwrap_val),
     ]
 }
 
@@ -87,7 +85,7 @@ fn map_weather_pic(e: ElementRef) -> Option<String> {
         .split(".png")
         .collect::<Vec<&str>>()
         .into_iter()
-        .nth(0)
+        .next()
         .map_or_else(
             || None,
             |s| {
@@ -126,31 +124,28 @@ fn map_wind(e: ElementRef) -> Option<String> {
         .map(|s| s.to_string())
         .collect::<Vec<String>>();
 
-    let wind = parse_wind(&tokens).map(|w| Some(w.value())).unwrap_or(None);
-    let wind_speed = parse_wind_speed(tokens);
+    let wind_speed = parse_wind_speed(&tokens);
 
-    if let Some(wind_dir) = wind {
-        Some(format!("{} {} m/s", wind_dir, wind_speed))
-    } else {
-        None
-    }
+    parse_wind(&tokens)
+        .map(|w| Some(format!("{} {} m/s", w.value(), wind_speed)))
+        .unwrap_or_else(|_| None)
 }
 
-fn parse_wind(tokens: &Vec<String>) -> Result<Wind> {
+fn parse_wind(tokens: &[String]) -> Result<Wind> {
     tokens
         .iter()
         .find(|t| t.contains("_png"))
         .map(|wd| wd.split("_png").collect::<Vec<&str>>()[0])
         .map(|wd| Wind::from_str(&wd))
-        .unwrap_or(Err(anyhow!("wind token not found!")))
+        .unwrap_or_else(|| Err(anyhow!("wind token not found!")))
 }
 
-fn parse_wind_speed(tokens: Vec<String>) -> String {
+fn parse_wind_speed(tokens: &[String]) -> String {
     // todo lol
     tokens
-        .into_iter()
+        .iter()
         .nth_back(1)
-        .unwrap_or(EMPTY_STR)
+        .unwrap_or(&EMPTY_STR)
         .chars()
         .into_iter()
         .rev()
@@ -161,8 +156,8 @@ fn parse_wind_speed(tokens: Vec<String>) -> String {
 }
 
 fn parse<F, T>(e: Option<ElementRef>, f: F) -> Option<T>
-where
-    F: Fn(ElementRef) -> Option<T>,
+    where
+        F: Fn(ElementRef) -> Option<T>,
 {
     match e {
         Some(e_ref) => f(e_ref),
