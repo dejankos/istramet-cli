@@ -1,9 +1,9 @@
 use std::error::Error;
-use std::fmt::{Display, Formatter};
 use std::fmt;
+use std::fmt::{Display, Formatter};
 use std::str::FromStr;
 
-use anyhow::anyhow;
+
 use anyhow::bail;
 
 pub enum Wind {
@@ -27,7 +27,7 @@ impl Wind {
             Wind::NE => '\u{2197}',
             Wind::NW => '\u{2196}',
             Wind::SE => '\u{2198}',
-            Wind::SW => '\u{2199}'
+            Wind::SW => '\u{2199}',
         }
     }
 }
@@ -45,7 +45,10 @@ impl FromStr for Wind {
             "NW" => Ok(Wind::NW),
             "SE" => Ok(Wind::SE),
             "SW" => Ok(Wind::SW),
-            _ => bail!(UnmatchedPattern::Msg(format!("Wind match not found for {}", s)))
+            _ => bail!(UnmatchedPattern::Msg(format!(
+                "Wind match not found for {}",
+                s
+            ))),
         }
     }
 }
@@ -69,7 +72,7 @@ impl Weather {
             Weather::Cloud => '\u{2601}',
             Weather::SunBehindCloud => '\u{26C5}',
             Weather::Rain => '\u{1F327}',
-            Weather::Moon => '\u{1F319}'
+            Weather::Moon => '\u{1F319}',
         }
     }
 }
@@ -84,14 +87,17 @@ impl FromStr for Weather {
             "46" | "10" | "5n" | "10n" | "9n" => Ok(Weather::Rain),
             "1n" => Ok(Weather::Moon),
             "1" => Ok(Weather::Sun),
-            _ => bail!(UnmatchedPattern::Msg(format!("Weather match not found for {}", s)))
+            _ => bail!(UnmatchedPattern::Msg(format!(
+                "Weather match not found for {}",
+                s
+            ))),
         }
     }
 }
 
 #[derive(Debug)]
 pub enum UnmatchedPattern {
-    Msg(String)
+    Msg(String),
 }
 
 impl Error for UnmatchedPattern {}

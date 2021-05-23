@@ -1,7 +1,6 @@
 mod html_parser;
 mod symbols;
 
-use scraper::{Html, Selector};
 
 
 #[tokio::main]
@@ -36,12 +35,10 @@ async fn main() -> Result<(), reqwest::Error> {
     //     println!("ROW END")
     // }
 
-
     let table = html_parser::parse_html(&body).await.unwrap();
 
-
     for v in table {
-          println!("{:?}", v);
+        println!("{:?}", v);
     }
 
     Ok(())
