@@ -3,8 +3,8 @@ use std::str::FromStr;
 use anyhow::anyhow;
 use anyhow::bail;
 use anyhow::Result;
-use scraper::{ElementRef, Html, Selector};
 use scraper::element_ref::Select;
+use scraper::{ElementRef, Html, Selector};
 
 use crate::symbols::{Weather, Wind};
 
@@ -156,8 +156,8 @@ fn parse_wind_speed(tokens: &[String]) -> String {
 }
 
 fn parse<F, T>(e: Option<ElementRef>, f: F) -> Option<T>
-    where
-        F: Fn(ElementRef) -> Option<T>,
+where
+    F: Fn(ElementRef) -> Option<T>,
 {
     match e {
         Some(e_ref) => f(e_ref),
