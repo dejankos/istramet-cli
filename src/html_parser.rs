@@ -8,10 +8,10 @@ use scraper::{ElementRef, Html, Selector};
 
 use crate::symbols::{Weather, Wind};
 
-const EMPTY_STR: String = String::new();
+pub const EMPTY_STR: String = String::new();
 
 pub type Row = Vec<Option<String>>;
-pub type Table = Vec<Row>;
+pub type TableData = Vec<Row>;
 
 enum Selectors {
     Table,
@@ -31,7 +31,7 @@ impl Selectors {
     }
 }
 
-pub async fn parse_html(html: &str) -> Result<Table> {
+pub async fn parse_html(html: &str) -> Result<TableData> {
     let doc = Html::parse_document(html);
     if let Some(data_table) = doc.select(&Selectors::Table.value()).next() {
         Ok(data_table

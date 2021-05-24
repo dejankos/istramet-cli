@@ -54,14 +54,10 @@ impl FromStr for Wind {
 
 pub enum Weather {
     Sun,
-    // \u{1f31e}
     Cloud,
-    // U+2601
     SunBehindCloud,
-    //'\u{26C5}',
     Rain,
-    // 1F327
-    Moon, // 1F319
+    Moon,
 }
 
 impl Weather {
@@ -82,8 +78,8 @@ impl FromStr for Weather {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "3" => Ok(Weather::SunBehindCloud),
-            "3n" | "4n" | "2" | "4" => Ok(Weather::Cloud),
-            "46" | "10" | "5n" | "10n" | "9n" => Ok(Weather::Rain),
+            "3n" | "4n" | "2" | "4" | "2n" => Ok(Weather::Cloud),
+            "46" | "10" | "5n" | "10n" | "9n" | "9" | "41n" => Ok(Weather::Rain),
             "1n" => Ok(Weather::Moon),
             "1" => Ok(Weather::Sun),
             _ => bail!(UnmatchedPattern::Msg(format!(
