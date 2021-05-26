@@ -1,6 +1,6 @@
 # Istramet CLI
 
-Cli tool for fetching weather forecast from the [local web](https://www.istramet.hr/) I usually follow.
+Cli tool for fetching weather forecast from the [local web](https://www.istramet.hr/) I usually follow.  
 Main motivation for this project was one afternoon of boredom.
 
 ## Usage
