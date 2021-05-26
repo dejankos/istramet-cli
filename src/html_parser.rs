@@ -31,26 +31,31 @@ impl Selectors {
     }
 }
 
-pub async fn parse_html(html: &str) -> Result<TableData> {
+pub async fn parse_html(html: &str, days: Option<u8>) -> Result<TableData> {
     let doc = Html::parse_document(html);
     if let Some(data_table) = doc.select(&Selectors::Table.value()).next() {
-        Ok(data_table
-            .select(&Selectors::TableRow.value())
-            .fold(Vec::new(), |mut acc, tr| {
-                let header = parse_header_row(tr.select(&Selectors::TableHeader.value()));
-                let data = parse_data_row(tr.select(&Selectors::TableData.value()));
+        let mut res = Vec::new();
+        let (mut day_count, total) = (0, days.unwrap_or(99) + 2);
 
-                if !header.is_empty() {
-                    acc.push(header);
+        for tr in data_table.select(&Selectors::TableRow.value()) {
+            let header = parse_header_row(tr.select(&Selectors::TableHeader.value()));
+            let data = parse_data_row(tr.select(&Selectors::TableData.value()));
+            if !header.is_empty() {
+                res.push(header);
+                day_count += 1;
+                if day_count == total {
+                    res.remove(res.len() - 1);
+                    break;
                 }
-                if !data.is_empty() {
-                    acc.push(data);
-                }
+            }
+            if !data.is_empty() {
+                res.push(data);
+            }
+        }
 
-                acc
-            }))
+        Ok(res)
     } else {
-        bail!("")
+        bail!("Table not not found!")
     }
 }
 

@@ -14,6 +14,12 @@ const BASE_URL: &str = "https://www.istramet.hr/prognoza/";
 pub struct CliArgs {
     #[structopt(help = "City name", default_value = "porec")]
     city: String,
+    #[structopt(
+        short,
+        long,
+        help = "Number of days to display name. Default is all days available."
+    )]
+    days: Option<u8>,
 }
 
 #[tokio::main]
@@ -21,7 +27,7 @@ async fn main() -> Result<()> {
     let args = CliArgs::from_args();
 
     let body = fetch_html(&args.city).await?;
-    let table_data = parse_html(&body).await?;
+    let table_data = parse_html(&body, args.days).await?;
     let table = create_table(table_data);
     table.print_tty(true);
 
