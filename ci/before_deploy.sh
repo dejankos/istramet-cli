@@ -21,6 +21,8 @@ main() {
 
     cp target/$TARGET/release/imet $stage/
 
+    sudo apt-get install libssl-dev
+
     cd $stage
     tar czf $src/$CRATE_NAME-$TRAVIS_TAG-$TARGET.tar.gz *
     cd $src
