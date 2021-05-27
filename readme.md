@@ -108,6 +108,12 @@ imet porec -d 3
 ```
 
 
+## Installation
+Download latest precompiled executable (Linux|WSL2/OSX) from [release page](https://github.com/dejankos/istramet-cli/releases) and add to system path.
+Add executable to `PATH` in `~/.bashrc` or to `/usr/local/bin`.
+
+
+
 ## License
 
 Istramet-cli is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
