@@ -13,6 +13,7 @@ scraper = "0.12.0"
 anyhow = "1.0"
 prettytable-rs = "0.8.0"
 structopt = "0.3.21"
+openssl = { version = "0.10", features = ["vendored"] }
 
 [[bin]]
 name = "imet"
