@@ -12,8 +12,6 @@ sudo: required
 env:
   global:
     - CRATE_NAME=istramet-cli
-    - OPENSSL_LIB_DIR="/usr/lib/x86_64-linux-gnu"
-    - OPENSSL_INCLUDE_DIR="/usr/include/openssl"
 
 matrix:
   include:
@@ -23,10 +21,15 @@ matrix:
     - env: TARGET=x86_64-apple-darwin
       os: osx
 
+addons:
+  apt:
+    packages:
+      - pkg-config
+      - libssl-dev
+
 before_install:
   - set -e
   - rustup self update
-  - sudo apt-get -y install libssl-dev
 
 install:
   - sh ci/install.sh
