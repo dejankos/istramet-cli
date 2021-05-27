@@ -30,6 +30,7 @@ addons:
 before_install:
   - set -e
   - rustup self update
+  - sudo apt install pkg-config libssl-dev
 
 install:
   - sh ci/install.sh
