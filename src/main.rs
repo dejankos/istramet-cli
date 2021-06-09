@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
     let args = CliArgs::from_args();
 
     let body = fetch_html(&args.city).await?;
-    let table_data = parse_html(&body, args.days).await?;
+    let table_data = parse_html(&body, args.days)?;
     let table = create_table(table_data);
     table.print_tty(true);
 

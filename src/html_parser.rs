@@ -31,7 +31,7 @@ impl Selectors {
     }
 }
 
-pub async fn parse_html(html: &str, days: Option<u8>) -> Result<TableData> {
+pub fn parse_html(html: &str, days: Option<u8>) -> Result<TableData> {
     let doc = Html::parse_document(html);
     if let Some(data_table) = doc.select(&Selectors::Table.value()).next() {
         let mut res = Vec::new();
